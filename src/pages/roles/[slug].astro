@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../layouts/Layout.astro';
+import Tag from '../../components/Tag.astro';
+import ApplyForm from '../../components/ApplyForm.astro';
+import { formatPostedDate } from '../../lib/jobs';
+
+export const prerender = true;
+
+export const getStaticPaths = (async () => {
+    const entries = await getCollection('jobs');
+    return entries.map((entry) => ({
+        params: { slug: entry.id },
+        props: { entry },
+    }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const job = entry.data;
+const { Content } = await render(entry);
+---
+
+<Layout title={`${job.title} — Caldova Careers`}>
+  <article class="py-8 max-w-3xl">
+    <a href="/" class="text-sm text-blue-400 hover:underline">← All open roles</a>
+
+    <h1 class="text-3xl font-bold text-slate-100 mt-4 mb-3" data-testid="role-detail-title">
+      {job.title}
+    </h1>
+
+    <div class="flex flex-wrap gap-2 mb-4">
+      <Tag color="blue">{job.department}</Tag>
+      <Tag color="slate">{job.type}</Tag>
+      {job.remote && <Tag color="slate">Remote</Tag>}
+    </div>
+
+    <p class="text-slate-400 mb-1">{job.location}</p>
+    <p class="text-xs text-slate-400 mb-8">Posted {formatPostedDate(job.postedDate)}</p>
+
+    <div class="prose prose-invert max-w-none text-slate-300 space-y-4">
+      <Content />
+    </div>
+
+    <ApplyForm jobId={entry.id} />
+  </article>
+</Layout>

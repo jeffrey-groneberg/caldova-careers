@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import RoleCard from '../components/RoleCard.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { sortByNewest } from '../lib/jobs';
+import type { Job } from '../types/job';
+
+export const prerender = true;
+
+const entries = await getCollection('jobs');
+const jobs: Job[] = sortByNewest(
+    entries.map((entry) => ({ slug: entry.id, ...entry.data })),
+);
+---
+
+<Layout title="Caldova Careers — Open roles">
+  <div class="py-8">
+    <section class="mb-10">
+      <h1 class="text-4xl font-bold text-slate-100 mb-3">Build the future of medicine</h1>
+      <p class="text-lg text-slate-400 max-w-2xl">
+        Caldova is an AI-native pharmaceutical company. Explore our open roles
+        and help us bring better treatments to patients faster.
+      </p>
+    </section>
+
+    <h2 class="text-2xl font-medium mb-6 text-slate-100">Open roles</h2>
+
+    {jobs.length === 0 ? (
+      <EmptyState text="There are no open roles right now. Check back soon." />
+    ) : (
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        data-testid="roles-grid"
+      >
+        {jobs.map((job) => <RoleCard job={job} />)}
+      </div>
+    )}
+  </div>
+</Layout>

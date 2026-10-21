@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 10
+    groups:
+      astro:
+        patterns:
+          - astro
+          - '@astrojs/*'
+      playwright:
+        patterns:
+          - '@playwright/*'
+          - '@axe-core/playwright'
+      drizzle:
+        patterns:
+          - drizzle-orm
+          - drizzle-kit
+          - '@libsql/client'
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7

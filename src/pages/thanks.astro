@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+export const prerender = true;
+---
+
+<Layout title="Application received — Caldova Careers">
+  <div class="py-16 max-w-2xl text-center mx-auto" data-testid="thanks">
+    <h1 class="text-3xl font-bold text-slate-100 mb-4">Thanks for applying!</h1>
+    <p class="text-slate-400 mb-8">
+      Your application has been received — our team reviews every submission and
+      will reach out by email if there's a fit.
+    </p>
+    <a
+      href="/"
+      class="inline-flex items-center justify-center rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 transition-colors"
+    >
+      Browse more roles
+    </a>
+  </div>
+</Layout>

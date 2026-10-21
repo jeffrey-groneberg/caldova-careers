@@ -1,0 +1,43 @@
+---
+import type { Job } from '../types/job';
+import Tag from './Tag.astro';
+import { formatPostedDate } from '../lib/jobs';
+
+interface Props {
+    job: Job;
+}
+
+const { job } = Astro.props;
+---
+
+<a
+    href={`/roles/${job.slug}`}
+    class="group block bg-slate-800/60 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-slate-700/50 hover:border-blue-500/50 hover:shadow-blue-500/10 hover:shadow-xl transition-all duration-300 hover:translate-y-[-6px]"
+    data-testid="role-card"
+    data-job-id={job.slug}
+    data-department={job.department}
+>
+    <div class="p-6">
+        <h3
+            class="text-xl font-semibold text-slate-100 mb-2 group-hover:text-blue-400 transition-colors"
+            data-testid="role-title"
+        >
+            {job.title}
+        </h3>
+
+        <div class="flex flex-wrap gap-2 mb-3">
+            <Tag color="blue" data-testid="role-department">{job.department}</Tag>
+            <Tag color="slate">{job.type}</Tag>
+            {job.remote && <Tag color="slate">Remote</Tag>}
+        </div>
+
+        <p class="text-slate-400 mb-4 text-sm line-clamp-3" data-testid="role-summary">
+            {job.summary}
+        </p>
+
+        <div class="flex items-center justify-end text-sm">
+            <span class="text-blue-400 font-medium">View role →</span>
+        </div>
+        <p class="mt-2 text-xs text-slate-400">Posted {formatPostedDate(job.postedDate)}</p>
+    </div>
+</a>

@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/*
+ * Caldova brand palette. The Tailwind `blue` scale is remapped to Caldova's
+ * navy → royal blue range so existing `blue-*` utilities render on-brand.
+ * Navy #16234B · Royal #2E6CFC · Ice #F4F7FC
+ */
+@theme {
+    --color-blue-50: #f4f7fc;
+    --color-blue-100: #e6eefd;
+    --color-blue-200: #c8d9fb;
+    --color-blue-300: #9cbbf6;
+    --color-blue-400: #6191f1;
+    --color-blue-500: #4a80fd;
+    --color-blue-600: #2e6cfc;
+    --color-blue-700: #1e54d1;
+    --color-blue-800: #1b3e92;
+    --color-blue-900: #16234b;
+    --color-blue-950: #0e1a38;
+}

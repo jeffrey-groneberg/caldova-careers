@@ -1,0 +1,92 @@
+---
+interface Props {
+    /** Content-collection slug of the role being applied to. */
+    jobId: string;
+}
+
+const { jobId } = Astro.props;
+---
+
+<form
+    method="POST"
+    action="/api/apply"
+    class="mt-8 bg-slate-800/60 border border-slate-700/50 rounded-xl p-6"
+    data-testid="apply-form"
+>
+    <h2 class="text-xl font-semibold text-slate-100 mb-1">Apply for this role</h2>
+    <p class="text-sm text-slate-400 mb-4">
+        Tell us who you are and why you're a fit — no account or login required.
+    </p>
+
+    <input type="hidden" name="jobId" value={jobId} />
+
+    <div class="mb-4">
+        <label for="name" class="block text-sm font-medium text-slate-200 mb-1">
+            Full name
+        </label>
+        <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            maxlength="200"
+            autocomplete="name"
+            class="w-full rounded-lg bg-slate-900 border border-slate-700 text-slate-100 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            data-testid="apply-name"
+        />
+    </div>
+
+    <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-slate-200 mb-1">
+            Email address
+        </label>
+        <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            maxlength="320"
+            autocomplete="email"
+            placeholder="you@example.com"
+            class="w-full rounded-lg bg-slate-900 border border-slate-700 text-slate-100 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            data-testid="apply-email"
+        />
+    </div>
+
+    <div class="mb-4">
+        <label for="note" class="block text-sm font-medium text-slate-200 mb-1">
+            Why this role? <span class="text-slate-400">(optional)</span>
+        </label>
+        <textarea
+            id="note"
+            name="note"
+            rows="4"
+            maxlength="2000"
+            class="w-full rounded-lg bg-slate-900 border border-slate-700 text-slate-100 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            data-testid="apply-note"
+        ></textarea>
+    </div>
+
+    <div class="mb-4">
+        <label for="links" class="block text-sm font-medium text-slate-200 mb-1">
+            Portfolio or work links <span class="text-slate-400">(optional)</span>
+        </label>
+        <input
+            id="links"
+            name="links"
+            type="text"
+            maxlength="500"
+            placeholder="https://…"
+            class="w-full rounded-lg bg-slate-900 border border-slate-700 text-slate-100 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            data-testid="apply-links"
+        />
+    </div>
+
+    <button
+        type="submit"
+        class="inline-flex items-center justify-center rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        data-testid="apply-submit"
+    >
+        Submit application
+    </button>
+</form>

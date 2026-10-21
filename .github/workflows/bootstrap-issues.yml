@@ -1,0 +1,65 @@
+name: Bootstrap issues
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: write
+
+jobs:
+  create-issues:
+    if: ${{ !github.event.repository.is_template }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Create bootstrap issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for file in $(find .github/bootstrap-issues -name '*.md' | sort); do
+            title=$(sed -n '1s/^# //p' "$file")
+            body_file=".github/bootstrap-issue-body.md"
+            labels=()
+            # Optional second-line marker: <!-- labels: a, b -->. Labels are created idempotently, removed from the issue body, and passed to gh issue create.
+            marker=$(sed -n '2p' "$file")
+            if [[ "$marker" == "<!-- labels: "* && "$marker" == *" -->" ]]; then
+              label_csv="${marker#<!-- labels: }"
+              label_csv="${label_csv% -->}"
+              tail -n +3 "$file" > "$body_file"
+              IFS=',' read -ra raw_labels <<< "$label_csv"
+              for raw_label in "${raw_labels[@]}"; do
+                label=$(echo "$raw_label" | xargs)
+                if [[ -n "$label" ]]; then
+                  gh label create "$label" --force --color "2E6CFC" --description "Workshop bootstrap issue" || true
+                  labels+=(--label "$label")
+                fi
+              done
+            else
+              tail -n +2 "$file" > "$body_file"
+            fi
+            if ! gh issue list --state all --search "$title in:title" --json title --jq '.[].title' | grep -Fxq "$title"; then
+              gh issue create --title "$title" --body-file "$body_file" "${labels[@]}"
+            fi
+            rm "$body_file"
+          done
+
+      - name: Remove bootstrap workflow and issues
+        run: |
+          set -euo pipefail
+          rm -rf .github/bootstrap-issues .github/workflows/bootstrap-issues.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: remove bootstrap issues workflow"
+          git push
